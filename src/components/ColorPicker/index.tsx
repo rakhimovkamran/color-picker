@@ -3,9 +3,11 @@ import {ChangeEvent, useEffect, useState} from "react";
 
 interface ColorPickerProps {
     value?: string
+
+    theme?: "dark" | "light"
 }
 
-export const ColorPicker = ({ value = "#000000" } : ColorPickerProps) => {
+export const ColorPicker = ({ value = "#000000", theme = "dark" } : ColorPickerProps) => {
 
     const [color, setColor] = useState(value)
     const [isCopied, setCopied] = useState(false)
@@ -13,11 +15,17 @@ export const ColorPicker = ({ value = "#000000" } : ColorPickerProps) => {
     const pickerID = `color-picker_${Date.now()}`
 
     const classes = {
-        base: cn("flex flex-col bg-gray-800 p-5 rounded-xl"),
+        base: cn("flex flex-col p-5 rounded-xl", {
+            "bg-gray-800": theme === "dark",
+            "bg-slate-200": theme === "light",
+        }),
         color: cn("w-24 absolute h-20 rounded-xl"),
         backdrop: cn("w-24 blur-md opacity-50 h-20 rounded-xl"),
-        button: cn("text-gray-400 mt-4 text-sm w-full border py-2 rounded-xl hover:bg-white",
-            "transition-colors hover:border-black hover:text-gray-700")
+        button: cn("text-gray-400 mt-4 text-sm w-full border py-2 rounded-xl",
+            "transition-colors", {
+            "text-gray-400 hover:border-black hover:text-gray-700 hover:bg-white": theme === "dark",
+            "border-gray-400 text-gray-500 hover:border-black hover:text-gray-700 hover:bg-black hover:text-gray-200": theme === "light"
+            })
     }
 
     const handleColorChange = (e: ChangeEvent<HTMLInputElement>) => {
